@@ -1,5 +1,5 @@
-0,2,-94
-0,4,-62
+Receiving Node ID, Transmitting Node ID, RSSI (dBm)
+rxID, txID, rssi
 0,5,-65
 0,4,-62
 0,6,-84
@@ -8748,5 +8748,3 @@
 7,2,-86
 7,1,-103
 7,1,-107
-Receiving Node ID, Transmitting Node ID, RSSI (dBm)
-rxID, txID, rssi
