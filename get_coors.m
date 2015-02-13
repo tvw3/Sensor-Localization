@@ -1,34 +1,41 @@
-function [ X , Y , Z, dist] = get_coors(filename)
+function [ Tx , Rx , RSSI, dist, mat_count] = get_coors(filename)
     % Set up x-y cooridinates from rssi and log distance equation
 
     raw_data = xlsread(filename);
     %number of nodes, add 1 to account for zero index
     n = max(raw_data(:,1)) + 1;
-    X = cell(n,1);
-    Y = cell(n,1);
-    Z = cell(n,1);
+    Tx = cell(n,1);
+    Rx = cell(n,1);
+    RSSI = cell(n,1);
     dist = cell(n,1);
-    %PL0 max rssi of entire dataset
-    PL0 = -43;
-    %d0 set 1m one tranmission power infered by PL0
-    d0 = 1;
-    alpha = 3;
-
-    %number of rows and cols of data
     [rows cols] = size(raw_data);
-    %format our nxn matrix
-%    data = cell(n,n);
+
     for i = (1:rows);
         %add one to account for zero index
-        X{i} = raw_data(i,1);
-        Y{i} = raw_data(i,2);
-        Z{i} =raw_data(i,3);
-        dist{i} = get_distance(Z{i},PL0,alpha,d0);
-        %data{sending,receiving} = [data{sending,receiving} rssi];
+        Tx{i} = raw_data(i,1);
+        Rx{i} = raw_data(i,2);
+        RSSI{i} =raw_data(i,3);
+        [dist{i}] = getDistance(raw_data(i,1),raw_data(i,2));        
     end
-    X = cell2mat(X);
-    Y = cell2mat(Y);
-    Z = cell2mat(Z);
+
+    Tx = cell2mat(Tx);
+    Rx = cell2mat(Rx);
+    RSSI = cell2mat(RSSI);
     dist = cell2mat(dist);
+    mat = unique(dist);
+    mat = cat(2, mat ,mat);
+    for j =(1:24);
+        mat(j,2)=0;
+    end
+    j=length(dist);
+    for i = 1:j;
+        for k = 1:24;
+            if mat(k,1)==dist(i);            
+                mat(k,2) = mat(k,2) +1;
+            end
+        end
+    end
+    
+    mat_count = mat;
 end
 
