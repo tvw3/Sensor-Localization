@@ -1,4 +1,6 @@
 function locations = load_known_nodes(filename,room_data)
+    %Returns a cell array with each column corresponding to the following:
+    %|node number||room name||x coordiante of node||y coordinate of node|
     %load the node numbers and locations
     %locations gives us the table with both the node number and room number
     %no need for extra formatting
