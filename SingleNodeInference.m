@@ -1,4 +1,4 @@
-function output = SingleNodeInference(i,k,node_locations,node_data)
+function output = SingleNodeInference(i,k,node_locations,node_data, models)
 % i = unknown node_id, IE: 6
 % k = room number, IE: 'R234'
 % node_locations = filename of known nodes, IE: 'node_locations.csv'
@@ -43,7 +43,7 @@ function output = SingleNodeInference(i,k,node_locations,node_data)
         if isnan(rssi(i))
             continue;
         else
-            distance(i) = get_distance(rssi(i),-42,7,18);
+            distance(i) = getdistance(rssi(i), models);
         end
     end
     
