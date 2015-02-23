@@ -68,10 +68,10 @@ function [ model] = set_model( known_links)
     end
     
     % sorted arrays and adds zeros to bound polynomial
-    rssi = flip(sortrows([zeros(1); unique_rssi]),1);
-    distance = sortrows([zeros(1); unique_dist]);
-    
+    rssi = flip(sortrows([ zeros(1); unique_rssi]),1);
+    distance = sortrows([ zeros(1); unique_dist]);
+   
     % sets coefficients returned by polyfit function of degree two
-    model = polyfit( rssi,distance, 2);    
+    model = polyfit( abs(rssi),distance, 1);    
 end 
 

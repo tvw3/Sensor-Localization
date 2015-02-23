@@ -26,7 +26,7 @@ function [ prob ] = trim( prob, known,centered, rssi_data ,model )
         end
         % gets a conservative estimate of the node link distance
         % to the closest connected node
-        data{index,1} = getdistance((max(data{index,1})*0.5), model);
+        data{index,1} = getdistance((mean(data{index,1})*0.35), model);
         
         % Increment index for next loop 
         index = index+1;
@@ -93,15 +93,36 @@ function [ prob ] = trim( prob, known,centered, rssi_data ,model )
     % Iterates though the workspace array and replacing the corressponging
     % probability index with 0, to remove from the potential list
     for i = (1:ind-1);
-        index = find(ismember(prob(:,1),data{i,2}));
+        for j = (1:length(prob));
+            if strcmp(prob{j,1},data{i,2});
+                index = j;
+                break;
+            end
+        end
         prob{index,2} = 0;
     end
-    
+        
     % Reinterates through list adding known locations back to prob list
-    for i = (1:length(known));
-        index = find(ismember(prob(:,1),known{i,2}));
-        prob{index,2} = prob{index,2} + 1; %incremented to account for multi room nodes
+    for i = (1:length(known))
+        for j = (1:length(prob));
+            if strcmp(prob{j,1},known{i,2});
+                index = j;
+                break;
+            end
+        end
+        count = 0;
+        for m = (1:length(known))
+            if strcmp(prob{j,1}, known{m,2})
+                count = count +1;
+            end
+        end
+        if count == 1
+            prob{index,2} = 1;%; %incremented to account for multi room nodes        
+        else
+            prob{index,2} = 2;
+        end
     end
+      
     % function to normalize probability matrix after room removal
     prob = normalize(prob,known);
  end

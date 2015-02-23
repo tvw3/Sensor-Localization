@@ -5,13 +5,11 @@ function [ prob ] = normalize( prob, known)
     % sets length of of input matrices for interation
     k = length(known);
     n =  length(prob);
-    
     % loop that sums the values of the probability column
     sum = 0;
     for i = (1:n);
         sum = prob{i,2} + sum;
     end
-    
     % creates factor to normalize data after removing known node weights
     % from table
     multiplier = 1/(sum-k);
