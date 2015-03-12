@@ -1,18 +1,20 @@
 function [ unknown_links ] = get_unknown_links( known_links,rssi_data ,model )
-%UNTITLED Summary of this function goes here
-%   Detailed explanation goes here
-    
+%return 5 column cell array of [start || end || rssi set || distance || end room id ]
+
+    % get set of end node id integer
     end_nodes = [];
     end_nodes = [end_nodes known_links{:,3};];
 
+    % get set of start node id integer
     start_nodes = [];
     start_nodes = [start_nodes known_links{:,2};];
 
-    known_nodes = unique(start_nodes);
+    % get unknown links int id
     unknown_nodes = setdiff(end_nodes,start_nodes);
-    all_nodes = union(end_nodes,start_nodes);
 
     unknown_links = [];
+    
+    % generates the return table by insertion at desired locations
     for n = (1:length(unknown_nodes));
         row = unknown_nodes(1,n) +1;
         for m = (1:length(rssi_data));
@@ -24,7 +26,9 @@ function [ unknown_links ] = get_unknown_links( known_links,rssi_data ,model )
                     index = {[]};
                 end
                 
-                unknown_links = [unknown_links; row-1 m-1 rssi_data(row,m)  getdistance(max(rssi_data{row,m}),model) index;];
+                unknown_links = [unknown_links; row-1 m-1 rssi_data(row,m)...
+                                        getdistance(max(rssi_data{row,m}),model)...
+                                        index;];
             end
         end
     end
