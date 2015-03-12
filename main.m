@@ -2,6 +2,11 @@ function main(rssi_data, node_location)
     %This is the entry point into our program
     %rssi_data - the csv containing all rssi data
     %node_locations - the csv containing all known node locations
+    
+    %Add the required subdirectories to the path if they are not already
+    %Requires that this main function be in the primary matlab directory
+    %THIS MUST ALWAYS BE THE FIRST COMMAND RUN
+    addpath(genpath('Sensor-Localization'))
 
     %load the rssi data and remove outliers from the data set
     rssi = remove_outliers(load_rssi(rssi_data));
