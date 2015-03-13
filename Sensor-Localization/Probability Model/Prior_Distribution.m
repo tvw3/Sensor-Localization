@@ -1,9 +1,6 @@
-rssi_data = load_rssi('rssi_data_trial_1.csv');
-room_data = load_room_data('rooms.csv');
-nodes_data = load_known_nodes('node_locations.csv',room_data);
-rssi_data = remove_outliers(rssi_data);
-rssi_centered= center_XY(room_data);
-probability_cell = set_prob(room_data, nodes_data);
-known_links = get_known_links(nodes_data, rssi_data);
-model = set_model(known_links);
-probability_cell = trim(probability_cell, nodes_data, rssi_centered, rssi_data, model);
+function probabilities = Prior_Distribution(rssi, rooms, known)
+    test_known_links = get_known_links(known,rssi);
+    unknown_links = get_unknown_links(test_known_links,rssi);
+    probabilities = in_range(test_known_links ,rooms, known, unknown_links);
+
+
