@@ -18,6 +18,6 @@ for i = 1: rows
     end
 end
 
-w = walls(index1, index2);
+w = cell2mat(walls(index1, index2));
 
 end
