@@ -21,8 +21,8 @@ function locations = load_known_nodes(filename,room_data)
        %get the index of the room in room data
        ind = find(ismember(room_data(:,1),room));
        %find the center x,y coords for the room
-       center_x = room_data{ind,2} + room_data{ind,4} / 2;
-       center_y = room_data{ind,3} - (room_data{ind,5} / 2);
+       center_x = room_data{ind,2};% + room_data{ind,4} / 2;
+       center_y = room_data{ind,3};% - (room_data{ind,5} / 2);
        %add to matrix container
        centers = [centers; [center_x, center_y]];
     end

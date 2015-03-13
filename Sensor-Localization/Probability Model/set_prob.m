@@ -3,7 +3,7 @@ function [ prob ] = set_prob( data_rooms, locations )
 %room
     
     % created interation variables   
-    k = length(locations);
+    [k d] = size(locations);
     n =  length(data_rooms);
     % initialize probability table
     prob = cell(n,2);
@@ -26,6 +26,9 @@ function [ prob ] = set_prob( data_rooms, locations )
     % re interate through table finding known node locations and setting
     % probablity by incrementing and rounding down to account for multi
     % room nodes
+    if isempty(locations)
+        return 
+    end
     for j = (1:k);
         for i = (1:n);
             if strcmp(locations{j,2},prob{i,1});
@@ -37,6 +40,6 @@ function [ prob ] = set_prob( data_rooms, locations )
     
     % call to normalize function to adjust initial values after known node
     % assignment
-    prob = normalize(prob, locations);
+%     prob = normalize(prob, locations);
 end
 

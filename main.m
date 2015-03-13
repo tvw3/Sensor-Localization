@@ -1,4 +1,4 @@
-function main(rssi_data, node_location)
+function main(rssi_data, node_locations)
     %This is the entry point into our program
     %rssi_data - the csv containing all rssi data
     %node_locations - the csv containing all known node locations
@@ -12,11 +12,9 @@ function main(rssi_data, node_location)
     rssi = remove_outliers(load_rssi(rssi_data));
     %load the room and node location data
     rooms = load_room_data('rooms.csv');
-    nodes = load_known_nodes(node_data,rooms);
-
-    %build the model - may be changed later
-    model = set_model(get_known_links(nodes, rssi));
-
+    nodes = load_known_nodes(node_locations,rooms);
+    %load the wall data
+    walls = load_walls('Walls.csv');
 
     %Get operational mode - test should check for nodes being searched for
     %and remove them from our nodes matrix. Operaional should throw a
@@ -49,9 +47,9 @@ function main(rssi_data, node_location)
     end
     
     %Get the probability of all possible room permutations
-    probabilities = get_room_candidates(rssi, rooms, nodes, nodes_to_locate);
+    probabilities = Prior_Distribution(rssi, rooms, nodes, nodes_to_locate);
     
     %Display the results
-    display_results(probabilities);
+    pretty_print(probabilities, nodes, length(nodes_to_locate), mode);
 end
 
