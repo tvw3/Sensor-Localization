@@ -9,47 +9,49 @@ function main(rssi_data, node_locations)
     addpath(genpath('Sensor-Localization'))
 
     %load the rssi data and remove outliers from the data set
-    rssi = remove_outliers(load_rssi(rssi_data));
+    rssi = (load_rssi(rssi_data));
     %load the room and node location data
     rooms = load_room_data('rooms.csv');
+    rooms = center_XY(rooms);
     nodes = load_known_nodes(node_locations,rooms);
+    
     %load the wall data
-    walls = load_walls('Walls.csv');
-
-    %Get operational mode - test should check for nodes being searched for
-    %and remove them from our nodes matrix. Operaional should throw a
-    %warning if a node being located is already a known node
-    mode = 'a';
-    while ~strcmp(mode,'t') && ~strcmp(mode,'o');
-        mode = lower(input('Enter operational mode: T for test, O for operational: ','s'));
-    end
-    
-    %Separated this out for better formatting and easier reading
-    %sprint allows the use of newline for formatting
-    node_input_string =sprintf(['Enter the node that you wish to locate.\n' ...
-        'If you would like to locate multiple nodes, please place them in\n' ...
-        'in brackets, separated by white space (e.g. [1 2 3]: ']);
-    
-    %Get the node, or nodes, that need to be located
-    nodes_to_locate = eval(input(node_input_string,'s'));
-    
-    %based on operational mode, we want to initially do different things
-    %with the data
-    if mode == 't';
-        %remove the nodes to find from the list of known nodes
-        nodes = clean_nodes(nodes,nodes_to_locate);
-    else
-        %check if the nodes to find already exist
-        if(check_nodes(nodes, nodes_to_locate));
-            %They do, warn the user
-           fprintf('Warning: Nodes to be located may already exist as known nodes\n'); 
-        end
-    end
+%     walls = load_walls('Walls.csv');
+% 
+%     %Get operational mode - test should check for nodes being searched for
+%     %and remove them from our nodes matrix. Operaional should throw a
+%     %warning if a node being located is already a known node
+%     mode = 'a';
+%     while ~strcmp(mode,'t') && ~strcmp(mode,'o');
+%         mode = lower(input('Enter operational mode: T for test, O for operational: ','s'));
+%     end
+%     
+%     %Separated this out for better formatting and easier reading
+%     %sprint allows the use of newline for formatting
+%     node_input_string =sprintf(['Enter the node that you wish to locate.\n' ...
+%         'If you would like to locate multiple nodes, please place them in\n' ...
+%         'in brackets, separated by white space (e.g. [1 2 3]: ']);
+%     
+%     %Get the node, or nodes, that need to be located
+%     nodes_to_locate = eval(input(node_input_string,'s'));
+%     
+%     %based on operational mode, we want to initially do different things
+%     %with the data
+%     if mode == 't';
+%         %remove the nodes to find from the list of known nodes
+%         nodes = clean_nodes(nodes,nodes_to_locate);
+%     else
+%         %check if the nodes to find already exist
+%         if(check_nodes(nodes, nodes_to_locate));
+%             %They do, warn the user
+%            fprintf('Warning: Nodes to be located may already exist as known nodes\n'); 
+%         end
+%     end
     
     %Get the probability of all possible room permutations
-    probabilities = Prior_Distribution(rssi, rooms, nodes, nodes_to_locate);
+    probabilities = Prior_Distribution(rssi, rooms, nodes, 1)
     
-    %Display the results
-    pretty_print(probabilities, nodes, length(nodes_to_locate), mode);
+%     %Display the results
+%     pretty_print(probabilities, nodes, length(nodes_to_locate), mode);
 end
 

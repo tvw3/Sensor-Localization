@@ -2,13 +2,14 @@ function [ link_array ] = get_known_links(data_nodes, data_rssi)
 % Organizations known link information into a cell for easy lookup
 
     % gets total known node total and allocations rows based upon that
-    length_known = length(data_nodes);
+    [length_known knoown_col] = size(data_nodes);
     data_array = cell(length_known^2, 5);
     index =1;
 
     % outer loop that interates though the rows of the known matrix
     for i = (1: length_known);
         % sets variables that are used in for organization
+
         start_node = data_nodes{i,1};
         room_name  = data_nodes{i,2};
         

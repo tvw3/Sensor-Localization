@@ -27,7 +27,6 @@ function [ unknown_links ] = get_unknown_links( known_links,rssi_data)
                 end
                 
                 unknown_links = [unknown_links; row-1 m-1 rssi_data(row,m)...
-                                        get_distance(max(rssi_data{row,m}))...
                                         index;];
             end
         end
