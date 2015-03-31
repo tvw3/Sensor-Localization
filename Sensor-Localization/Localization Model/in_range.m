@@ -5,7 +5,7 @@ function [ update_prob ] = in_range( known_links ,room_data, known_nodes_data, u
     
     % creates a matrix of all end links from known start nodes
     end_nodes = [];
-    end_nodes = [end_nodes unknown_links{:,2}];
+    end_nodes = [end_nodes unknown_links{:,2} unknown_links{:,1}];
     
     known_node_id = unique(known_links(:,1));
     % creates a matrix of all known start nodes

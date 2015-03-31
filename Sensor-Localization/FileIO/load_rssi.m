@@ -9,8 +9,8 @@ function data = load_rssi(filename)
     data = cell(n,n);
     for i = (1:rows);
         %add one to account for zero index caused by starting at node 0
-        sending = raw_data(i,1) + 1;
-        receiving = raw_data(i,2) + 1;
+        receiving = raw_data(i,1) + 1;
+        sending = raw_data(i,2) + 1;
         rssi = raw_data(i,3);
         data{sending,receiving} = [data{sending,receiving} rssi];
     end
