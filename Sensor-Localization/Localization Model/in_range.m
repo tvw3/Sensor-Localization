@@ -6,7 +6,8 @@ function [ update_prob ] = in_range( known_links ,room_data, known_nodes_data, u
     % creates a matrix of all end links from known start nodes
     end_nodes = [];
     end_nodes = [end_nodes unknown_links{:,2}];
-
+    
+    known_node_id = unique(known_links(:,1));
     % creates a matrix of all known start nodes
     start_nodes = [];
     start_nodes = [start_nodes known_links{:,2}];
@@ -196,6 +197,7 @@ function [ update_prob ] = in_range( known_links ,room_data, known_nodes_data, u
         end
         % added to final candidate list after all links are checked per
         % node testing
+        
         if length(temp_candidates)>1;
             for l = (1:length(temp_candidates));
                 candidates{end+1} =temp_candidates{1,l};
@@ -231,7 +233,7 @@ function [ update_prob ] = in_range( known_links ,room_data, known_nodes_data, u
         end
     end
 %     Test output code
-%     can_Table
+%      can_Table
     
    
     [row, col] = size(can_Table);
@@ -254,12 +256,12 @@ function [ update_prob ] = in_range( known_links ,room_data, known_nodes_data, u
                 str = [str;can_Table(k,col)];
             end
         end
-        if isempty(str)
-            str = can_Table(:,col);
-        end
+%         if isempty(str)
+%             str =
+%         end
         % get rooms the node is not in
         not_in = setdiff(tmp_prob_Table(:,1),str(:,1));
-        not_in;
+        not_in = union(not_in,known_node_id);
         %sets the probability of rooms nod eis not in to zero
         for l = (1:length(not_in));
             index = find(ismember(tmp_prob_Table(:,1),not_in{l,1}));
@@ -280,6 +282,8 @@ function [ update_prob ] = in_range( known_links ,room_data, known_nodes_data, u
         if iscellstr(update_prob(a,1))
             count = length(find(ismember(known_nodes_data(:,2),update_prob(a,1))));
             update_prob{a,2} = update_prob{a,2} -count;
+        else
+            update_prob{a,1} = num2str(update_prob{a,1});
         end 
         if update_prob{a,2} ==0 | isempty(update_prob{a,2});
             continue
