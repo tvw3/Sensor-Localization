@@ -23,17 +23,20 @@ function main(rssi_data, node_locations)
     %warning if a node being located is already a known node
     mode = 'a';
     while ~strcmp(mode,'t') && ~strcmp(mode,'o');
-        mode = lower(input('Enter operational mode: T for test, O for operational: ','s'));
+        mode = lower(input('Enter operational mode type: T for test, O for operational: ','s'));
     end
     
-    %Separated this out for better formatting and easier reading
-    %sprint allows the use of newline for formatting
-    node_input_string =sprintf(['Enter the node that you wish to locate.\n' ...
-        'If you would like to locate multiple nodes, please place them in\n' ...
-        'in brackets, separated by white space (e.g. [1 2 3]: ']);
+    if mode=='t'
+        x = 'a';
+        while ~endswith(x,'.csv')
+            x = input('What is the name of the file with all node information? (e.g. full_node_list.csv): ', 's');
+        end
+        all_nodes = load_known_nodes(x,rooms);
+    else
+        all_nodes = 'NA';
+    end
     
-    %Get the node, or nodes, that need to be located
-    nodes_to_locate = eval(input(node_input_string,'s'));
+    
     
     %based on operational mode, we want to initially do different things
     %with the data
@@ -50,13 +53,13 @@ function main(rssi_data, node_locations)
     end
     
     %Get the probability of all possible room permutations
-        known_links = get_known_links(nodes,rssi);
+    known_links = get_known_links(nodes,rssi);
     unknown_links = get_unknown_links(known_links,rssi);
     probabilities = in_range(known_links ,rooms, nodes, unknown_links);
-   [prob, candi] = get_infer(probabilities,rooms,known_links,unknown_links);
-   result=compress(candi,prob)
+    [prob, candi] = get_infer(probabilities,rooms,known_links,unknown_links);
+    results = compress(candi,prob);
 
 %     %Display the results
-%     pretty_print(probabilities, nodes, length(nodes_to_locate), mode);
+      print(results, all_nodes, length(results(1,:))/2, mode);
 end
 
