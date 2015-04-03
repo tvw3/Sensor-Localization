@@ -72,6 +72,6 @@ function [ model] = set_model( known_links)
     distance = sortrows([ zeros(1); unique_dist]);
    
     % sets coefficients returned by polyfit function of degree two
-    model = polyfit( abs(rssi),distance, 1);    
+    model = polyfit( (rssi),distance, 1);    
 end 
 

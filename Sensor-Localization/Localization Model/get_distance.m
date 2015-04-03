@@ -10,5 +10,7 @@ function d = get_distance(PL, knownRoom,possibleRoom)
 PL0 = -43;
 alpha = 3;
 d0= 18;
-    d = d0 * (10 ^ ((PL - PL0)/-(10 * alpha))) - 9 * get_walls(knownRoom, possibleRoom)^(2.7/1.78);
+    d = abs(d0 * (10 ^ ((PL - PL0)/-(10 * alpha))) - 9 * get_walls(knownRoom, possibleRoom)^(2.7/1.78));
+if d>500
+    d = abs(getdistance(PL))*0.15;
 end

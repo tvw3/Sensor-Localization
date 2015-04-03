@@ -3,6 +3,10 @@ function [ update_prob ] = in_range( known_links ,room_data, known_nodes_data, u
 %the unknown node potential list is delimited by its integer node id in
 % column 1 and and empty cell in column two
     
+
+    poor_model = {'R201';'R202';'R203';'R204';'R205';'R220';'R222';...
+        'R261';'R262';'R263';'R264'};
+    
     % creates a matrix of all end links from known start nodes
     end_nodes = [];
     end_nodes = [end_nodes unknown_links{:,2} unknown_links{:,1}];
@@ -103,9 +107,9 @@ function [ update_prob ] = in_range( known_links ,room_data, known_nodes_data, u
         end
         % adds unknown node int to candidate list for delimination
         candidates{end+1} = unknown_nodes(1,index);
-        if isempty(temp_candidates)
-            temp_candidates = transpose(room_data(:,1));
-        end
+%         if isempty(temp_candidates)
+%             temp_candidates = transpose(poor_model(:,1));%transpose(room_data(:,1));
+%         end
         % concat the candidate list with the rooms the node may be in
         candidates = cat(2,candidates,temp_candidates);
         
@@ -125,6 +129,7 @@ function [ update_prob ] = in_range( known_links ,room_data, known_nodes_data, u
     index = 1;
     % processes potential room list for easy interpretation with room list
     % in rows and the for row of each column being the unknown node
+    
     for a = (1:length(candidates));
         if (col<length(unknown_nodes)) & (candidates{1,a}==unknown_nodes(1,col+1));
             index =1;
@@ -137,7 +142,7 @@ function [ update_prob ] = in_range( known_links ,room_data, known_nodes_data, u
         index = index+1;
     end
 %     test output at this point in function
-%     can_Table
+% can_Table
     candidates = {};
     potentials = {};
 
@@ -145,11 +150,13 @@ function [ update_prob ] = in_range( known_links ,room_data, known_nodes_data, u
     % this does pretty much the same thing as the above  nested loop but using
     % the unknown node as the starting location to the known nodes outer
     % loop is used to keep track of the current unknown node being checked
+    
+    unknown_nodes;
     for offset = (1:length(unknown_nodes));
         candidates{ end +1} = can_Table{1,offset};
         b=2;
         % used to iterate through potential room list previously generated
-        while ~(isempty(can_Table{b,offset}))&&b<=row;
+        while b<=length(can_Table) & ~(isempty(can_Table{b,offset}));
             start_index = find(ismember(room_data(:,1),can_Table{b,offset}));
             link_total =0;
             % iterates though unknown links Table pulling data from unknown
@@ -159,6 +166,7 @@ function [ update_prob ] = in_range( known_links ,room_data, known_nodes_data, u
                 % are checked p
                 if (can_Table{1,offset} == unknown_links{c,1});
                     end_index = find(strcmp(room_data(:,1),unknown_links(c,4)));
+                    
 %                     room_data{start_index,1}
 %                     room_data{end_index,1}
                     radius= get_distance( max(unknown_links{c,3}), room_data(start_index,1), room_data(end_index,1));
@@ -215,7 +223,7 @@ function [ update_prob ] = in_range( known_links ,room_data, known_nodes_data, u
         % resets the temps candidate array
         temp_candidates={};
     end
-    
+
     can_Table = cell(length(room_data)+1,length(unknown_nodes));
     col = 0;
     % processes the  data created frem the previos loop processing for easy
@@ -256,13 +264,15 @@ function [ update_prob ] = in_range( known_links ,room_data, known_nodes_data, u
                 str = [str;can_Table(k,col)];
             end
         end
-%         if isempty(str)
-%             str =
-%         end
+        if isempty(str)
+            str = poor_model;
+        end
         % get rooms the node is not in
-        not_in = setdiff(tmp_prob_Table(:,1),str(:,1));
-        not_in = union(not_in,known_node_id);
+        not_in = setdiff(tmp_prob_Table(:,1), str(:,1));
+%         not_in = setdiff(union(not_in,known_node_id),poor_model);
         %sets the probability of rooms nod eis not in to zero
+        
+        
         for l = (1:length(not_in));
             index = find(ismember(tmp_prob_Table(:,1),not_in{l,1}));
             tmp_prob_Table{index,2} = 0;
